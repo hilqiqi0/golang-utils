@@ -1,0 +1,15 @@
+RedisCluster:
+  Addrs: ["lobby-recommedn.3dmjyd.clustercfg.usw2.cache.amazonaws.com:6379"]
+  Pool_size: 200
+  Db: 0
+
+
+Redis_items:
+  test_item:
+    Prefix: "testffff:"
+    Expire: 200
+    Len: 10
+  test_item2:
+    Prefix: "test:"
+    Expire: 200
+    Len: 5

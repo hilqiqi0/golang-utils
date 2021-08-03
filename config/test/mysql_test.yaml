@@ -1,0 +1,10 @@
+Comic_data:
+  Host: lobby-recommend-mysql.cluster-cv0o4cagzjbt.us-west-2.rds.amazonaws.com
+  Port: "3306"
+  User: lobbyadmin
+  Password: "4thecrazyones"
+  Db_name: test
+  Table_name:
+    Comic: airec_sentry
+  Max_conns: 10
+  Time_out: 50
