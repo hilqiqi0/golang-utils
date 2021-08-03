@@ -106,3 +106,5 @@ func TestPutDate(t *testing.T) {
 	}
 
 }
+
+// 参考：https://github.com/tsuna/gohbase
