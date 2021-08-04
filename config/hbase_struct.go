@@ -3,11 +3,11 @@ package config
 import gohbase "github.com/tsuna/gohbase"
 
 type HbaseDbData struct {
-	Thrift    string `json:"thrift"`
-	Zkquorum  string `json:"zkquorum"`
-	Option    string `json:"option"`
-	Namespace string `json:"namespace"`
-	Account   string `json:"account"`
+	Thrift    string `yaml:"thrift"`
+	Zkquorum  string `yaml:"zkquorum"`
+	Option    string `yaml:"option"`
+	Namespace string `yaml:"namespace"`
+	Account   string `yaml:"account"`
 }
 
 func (that *ConfigEngine) GetHbaseFromConf(name string) *HbaseDbData {

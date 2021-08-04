@@ -1,8 +1,6 @@
 package hbases
 
 import (
-	"fmt"
-
 	"github.com/hilqiqi0/golang-utils/config"
 
 	"github.com/tsuna/gohbase"
@@ -27,8 +25,8 @@ import (
 // }
 
 type HBaseDbInfo struct {
-	Zkquorum  string
-	Option    string
+	// Zkquorum  string
+	// Option    string
 	Namespace string
 	Client    gohbase.Client
 }
@@ -37,12 +35,12 @@ func (that *HBaseDbInfo) GetHbaseConnFromConf(c *config.ConfigEngine, name strin
 	// redis_login := c.GetRedisDataFromConf(name)
 	// that.redisDataDb = createSingleClient(redis_login)
 	// that.poolSize = redis_login.Pool_size
+	// fmt.Println("======", name)
 	hbase_login := c.GetHbaseFromConf(name)
 	// that.Zkquorum = hbase_login.Zkquorum
-	// that.Namespace = hbase_login.Namespace
-	fmt.Println(hbase_login.Thrift)
-	Client := gohbase.NewClient(hbase_login.Thrift)
-	that.Client = Client
+	that.Namespace = hbase_login.Namespace
+	// fmt.Println("======", hbase_login)
+	that.Client = gohbase.NewClient(hbase_login.Thrift)
 }
 
 func (that *HBaseDbInfo) GetDb() gohbase.Client {

@@ -1,6 +1,6 @@
 
 Hbase:
-  thrift: "ip-172-17-49-77.us-west-2.compute.internal"
+  thrift: ip-172-17-49-77.us-west-2.compute.internal
   port: "2181"
   account: "root"
   namespace: "default"
@@ -9,3 +9,15 @@ Hbase:
 HbaseInfo:
   table: lobby_test:item_scene
   ColumnName: info
+
+
+Comic_data:
+  Host: lobby-recommend-mysql.cluster-cv0o4cagzjbt.us-west-2.rds.amazonaws.com
+  Port: "3306"
+  User: lobbyadmin
+  Password: "4thecrazyones"
+  Db_name: test
+  Table_name:
+    Comic: airec_sentry
+  Max_conns: 10
+  Time_out: 50
