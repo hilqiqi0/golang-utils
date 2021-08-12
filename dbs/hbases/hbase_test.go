@@ -34,6 +34,24 @@ func TestScanData(t *testing.T) {
 	}
 }
 
+func TestScanOptionData(t *testing.T) {
+	t.Log(Config_path)
+	c := config.ConfigEngine{}
+	var err error
+	err = c.Load(Config_path)
+	errs.CheckCommonErr(err)
+	t.Log(c)
+	hbasedb := new(hbases.HBaseDbInfo)
+	hbasedb.GetHbaseConnFromConf(&c, "Hbase")
+
+	// client := hbasedb.GetDb()
+	f := map[string][]string{"info": []string{"description"}}
+	infos, _ := hbasedb.HBaseScanOption("lobby_test:item_scene", hrpc.Families(f))
+
+	for k, info := range infos {
+		fmt.Println(k, info)
+	}
+}
 func TestGetData(t *testing.T) {
 	t.Log(Config_path)
 	c := config.ConfigEngine{}

@@ -153,3 +153,40 @@ func (that *HBaseDbInfo) GetsByOption(table string, rowkey string, options func(
 	}
 	return resultMap, nil
 }
+
+//指定表，通过options筛选数据，例如Families函数，或者filter函数
+func (that *HBaseDbInfo) HBaseScanOption(table string, options func(hrpc.Call) error) (info []map[string]string, err error) {
+	defer func() {
+		if e := recover(); e != nil {
+			errs.CheckCommonErr(fmt.Errorf(fmt.Sprintf("Invoke recall failed: %s, trace:\n%s", e, debug.Stack())))
+			err = fmt.Errorf("put hbase error")
+			return
+		}
+	}()
+	var resultMaps []map[string]string
+
+	getRequest, err := hrpc.NewScanStr(context.Background(), table, options)
+	if err != nil {
+		errs.CheckCommonErr(fmt.Errorf(fmt.Sprintf("NewScan error, table=%s,error:%s", table, err)))
+		return resultMaps, err
+	}
+	scanResult := that.Client.Scan(getRequest)
+
+	if err != nil {
+		errs.CheckCommonErr(fmt.Errorf(fmt.Sprintf("Scan error, table=%s,error:%s", table, err)))
+		return resultMaps, err
+	}
+	for {
+		getRsp, err := scanResult.Next()
+		if err != nil {
+			break
+		}
+		resultMap := make(map[string]string)
+		for _, cell := range getRsp.Cells {
+			resultMap[string(cell.Qualifier)] = string(cell.Value)
+		}
+		resultMaps = append(resultMaps, resultMap)
+	}
+
+	return resultMaps, nil
+}
