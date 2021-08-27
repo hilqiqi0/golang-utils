@@ -8,6 +8,7 @@ const (
 const (
 	// 运行环境
 	RUN_MODE_DEV  = "dev"
+	RUN_MODE_TEST = "test"
 	RUN_MODE_PROD = "prod"
 )
 
