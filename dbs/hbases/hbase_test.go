@@ -9,6 +9,7 @@ import (
 	"github.com/hilqiqi0/golang-utils/dbs/hbases"
 	"github.com/hilqiqi0/golang-utils/tools/errs"
 	"github.com/tsuna/gohbase"
+	"github.com/tsuna/gohbase/filter"
 	"github.com/tsuna/gohbase/hrpc"
 )
 
@@ -52,6 +53,38 @@ func TestScanOptionData(t *testing.T) {
 		fmt.Println(k, info)
 	}
 }
+
+// 过滤列，限制行
+func TestScanOptionDataPageFilter(t *testing.T) {
+	t.Log(Config_path)
+	c := config.ConfigEngine{}
+	var err error
+	err = c.Load(Config_path)
+	errs.CheckCommonErr(err)
+	t.Log(c)
+	hbasedb := new(hbases.HBaseDbInfo)
+	hbasedb.GetHbaseConnFromConf(&c, "Hbase")
+
+	var hf []func(hrpc.Call) error
+	// 只查询固定的列{cf: [col1, col2]}
+	var Families map[string][]string
+	Families = map[string][]string{"info": []string{"description"}}
+	hf = append(hf, hrpc.Families(Families))
+
+	var Filter filter.Filter
+	// 限制返回条数
+	Filter = filter.NewPageFilter(1)
+	hf = append(hf, hrpc.Filters(Filter))
+
+	infos, _ := hbasedb.HBaseScanOption("lobby_test:item_scene", hf...)
+
+	for k, info := range infos {
+		fmt.Println(k, info)
+	}
+
+	// 参考：https://www.cnblogs.com/P--K/p/11393862.html
+}
+
 func TestGetData(t *testing.T) {
 	t.Log(Config_path)
 	c := config.ConfigEngine{}

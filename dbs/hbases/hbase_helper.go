@@ -155,7 +155,7 @@ func (that *HBaseDbInfo) GetsByOption(table string, rowkey string, options func(
 }
 
 //指定表，通过options筛选数据，例如Families函数，或者filter函数
-func (that *HBaseDbInfo) HBaseScanOption(table string, options func(hrpc.Call) error) (info []map[string]string, err error) {
+func (that *HBaseDbInfo) HBaseScanOption(table string, options ...func(hrpc.Call) error) (info []map[string]string, err error) {
 	defer func() {
 		if e := recover(); e != nil {
 			errs.CheckCommonErr(fmt.Errorf(fmt.Sprintf("Invoke recall failed: %s, trace:\n%s", e, debug.Stack())))
@@ -165,7 +165,7 @@ func (that *HBaseDbInfo) HBaseScanOption(table string, options func(hrpc.Call) e
 	}()
 	var resultMaps []map[string]string
 
-	getRequest, err := hrpc.NewScanStr(context.Background(), table, options)
+	getRequest, err := hrpc.NewScanStr(context.Background(), table, options...)
 	if err != nil {
 		errs.CheckCommonErr(fmt.Errorf(fmt.Sprintf("NewScan error, table=%s,error:%s", table, err)))
 		return resultMaps, err
