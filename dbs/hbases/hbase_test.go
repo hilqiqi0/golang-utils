@@ -137,5 +137,22 @@ func TestPutData(t *testing.T) {
 
 }
 
+func TestDeleteData(t *testing.T) {
+	t.Log(Config_path)
+	c := config.ConfigEngine{}
+	var err error
+	err = c.Load(Config_path)
+	errs.CheckCommonErr(err)
+	t.Log(c)
+	hbasedb := new(hbases.HBaseDbInfo)
+	hbasedb.GetHbaseConnFromConf(&c, "Hbase")
+
+	// client := hbasedb.GetDb()
+	err1 := hbasedb.HbaseDelete("t1", "r2")
+
+	fmt.Println(err1)
+
+}
+
 // 参考：https://github.com/tsuna/gohbase
 // https://blog.csdn.net/Ssxy0606/article/details/99945479

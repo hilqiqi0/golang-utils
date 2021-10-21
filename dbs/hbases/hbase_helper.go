@@ -19,6 +19,32 @@ type HBaseConfig struct {
 	ColumnName string
 }
 
+func (that *HBaseDbInfo) HbaseDelete(table, rowkey string) (err error) {
+	defer func() {
+		if e := recover(); e != nil {
+			// global.Logger.Errorf("Invoke recall failed: %s, trace:\n%s", e, debug.Stack())
+			err = fmt.Errorf("delete hbase error")
+			return
+		}
+	}()
+	ctx, cancel := context.WithTimeout(context.Background(), 2000*time.Millisecond) // 200ms, 本地映射后会增长时间
+	defer cancel()
+	// 删除整条记录, value为空即可
+	var value map[string]map[string][]byte
+	req, err := hrpc.NewDelStr(ctx, table, rowkey, value)
+	if err != nil {
+		errs.CheckCommonErr(fmt.Errorf(fmt.Sprintf("Delete error, rowKey=%s,error:%s", rowkey, err)))
+		return err
+	}
+	_, err = that.Client.Delete(req)
+	if err != nil {
+		errs.CheckCommonErr(fmt.Errorf(fmt.Sprintf("client.delete error, rowKey=%s,error:%s", rowkey, err)))
+		return err
+	} else {
+		errs.CheckCommonErr(fmt.Errorf(fmt.Sprintf("client.delete the record, table=%s, rowKey=%s", table, rowkey)))
+	}
+	return nil
+}
 func (that *HBaseDbInfo) HBasePut(table, rowkey, columnName string, data map[string][]byte) (err error) {
 	defer func() {
 		if e := recover(); e != nil {
