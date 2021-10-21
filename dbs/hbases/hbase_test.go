@@ -125,8 +125,15 @@ func TestPutData(t *testing.T) {
 	client := gohbase.NewClient(thrift)
 
 	// Values maps a ColumnFamily -> Qualifiers -> Values.
-	values := map[string]map[string][]byte{"cf": map[string][]byte{"a": []byte{0}}}
-	putRequest, err := hrpc.NewPutStr(context.Background(), "test", "key", values)
+	values := map[string]map[string][]byte{"f1": map[string][]byte{"col1": []byte("val1")}}
+	// value := map[string]map[string][]byte{
+	// 	"cf": { // 列族名, 与创建表时指定的名字保持一致
+	// 		"col1": []byte("val1"),  // 列与值, 列名可自由定义
+	// 		"col2": []byte("val2"),
+	// 		"col3": []byte("val3"),
+	// 	}
+	// }
+	putRequest, err := hrpc.NewPutStr(context.Background(), "t1", "r4", values)
 	if err != nil {
 
 	}
@@ -148,7 +155,25 @@ func TestDeleteData(t *testing.T) {
 	hbasedb.GetHbaseConnFromConf(&c, "Hbase")
 
 	// client := hbasedb.GetDb()
-	err1 := hbasedb.HbaseDelete("t1", "r2")
+	err1 := hbasedb.HbaseDelete("t1", "r4")
+
+	fmt.Println(err1)
+
+}
+
+func TestPutDataMa(t *testing.T) {
+	t.Log(Config_path)
+	c := config.ConfigEngine{}
+	var err error
+	err = c.Load(Config_path)
+	errs.CheckCommonErr(err)
+	t.Log(c)
+	hbasedb := new(hbases.HBaseDbInfo)
+	hbasedb.GetHbaseConnFromConf(&c, "Hbase")
+
+	// client := hbasedb.GetDb()
+	values := map[string][]byte{"a": []byte("val1")}
+	err1 := hbasedb.HBasePut("t1", "r7", "f1", values)
 
 	fmt.Println(err1)
 

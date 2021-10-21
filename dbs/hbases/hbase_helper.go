@@ -55,9 +55,7 @@ func (that *HBaseDbInfo) HBasePut(table, rowkey, columnName string, data map[str
 	}()
 	infoData := make(map[string]map[string][]byte)
 	infoData[columnName] = data
-	ctx, cancel := context.WithTimeout(context.Background(), 2000*time.Millisecond) // 200ms, 本地映射后会增长时间
-	defer cancel()
-	putRequest, err := hrpc.NewPutStr(ctx, table, rowkey, infoData)
+	putRequest, err := hrpc.NewPutStr(context.Background(), table, rowkey, infoData)
 	if err != nil {
 		errs.CheckCommonErr(fmt.Errorf(fmt.Sprintf("NewPutStr error, rowKey=%s,error:%s", rowkey, err)))
 		return err
